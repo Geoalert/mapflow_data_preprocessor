@@ -19,10 +19,10 @@ def main(ms_file, out_file, r=1, g=2, b=3):
     # Nodata should be transfered to uint8 range to match the image dtype
     nodata_value = profile.get('nodata')
     if nodata_value is not None:
-        if 0 <= nodata <= 255:
-            profile.update(nodata = int(nodata_value))      
+        if 0 <= nodata_value <= 255:
+            profile.update(nodata=int(nodata_value))
         else:
-            profile.update(nodata = 0)
+            profile.update(nodata=0)
 
     channels_8bit = []
     for channel in [red, grn, blu]:
@@ -34,7 +34,7 @@ def main(ms_file, out_file, r=1, g=2, b=3):
             (M-m)
         )
         # We clip it from 1 to leave 0 value for nodata
-        ch_8bit = np.clip(np.around(ch_8bit, 1), 0, 255).astype('uint8')
+        ch_8bit = np.clip(np.around(ch_8bit, 0), 1, 255).astype('uint8')
         channels_8bit.append(ch_8bit)
 
     with rasterio.open(out_file, 'w', **profile) as dst:
